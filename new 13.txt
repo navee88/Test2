@@ -1,0 +1,212 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import LoginImage from '../../Login/LoginImage';
+import LoginForm from '../../Login/LoginForm';
+import ForgotPassword from '../../Login/Forgotpass';
+import CreatePassword from '../../Login/CreatePassword';
+import Verificationcode from '../../Login/Verificationcode';
+import ChangePassword from '../../Login/ChangePassword';
+import PasswordPolicy from '../../Login/PasswordPolicy';
+import servicecall from "../../../Services/servicecall";
+import { getOSName } from "../../../Services/CF_osName";
+import { CF_sessionSet } from "../../Common/CF_session";
+
+
+// function Loginlayout() {
+//   const [currentView, setCurrentView] = useState('login');
+//   const [sites, setSites] = useState([]);
+//   const [domains, setDomains] = useState([]);
+//   const [timeZones, setTimeZones] = useState([]);
+//   const [showTimeZone, setShowTimeZone] = useState(false);
+//   const [initialForm, setInitialForm] = useState({
+//     site: "",
+//     domain: "",
+//     timeZone: "",
+//   });
+  
+//   const osNameRef = useRef("");
+//   const { postData } = servicecall();
+
+//   // Your existing useEffect...
+//   useEffect(() => {
+//     const initialize = async () => {
+//       try {
+//         getOSName((result) => (osNameRef.current = result));
+
+//         const siteData = await postData("Login/LoadSite", {});
+//         const siteList = siteData.sitelist || [];
+//         console.log("✅ Site List:", siteList); // DEBUG
+//         setSites(siteList);
+
+//         const currentSite = siteList?.[0]?.sSiteCode || "";
+//         console.log("✅ Current Site:", currentSite); // DEBUG
+
+//         if (currentSite) {
+//           const domainData = await postData("Login/LoadDomainCombo", {
+//             sSiteCode: currentSite,
+//           });
+          
+//           const domainList = domainData || [];
+//           setDomains(domainList);
+          
+//           const defaultDomain = domainList[0]?.sDomainName || "";
+
+//           const tzData = await postData("Login/getTimeZones", {});
+//           const timeZonesList = tzData.TimeZones || [];
+//           setTimeZones(timeZonesList);
+
+//           let browserLocalTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+//           if (browserLocalTimeZone === "Asia/Calcutta") browserLocalTimeZone = "Asia/Kolkata";
+
+//           const foundTZ = timeZonesList.find(
+//             (t) =>
+//               t.sTimeZoneValue === browserLocalTimeZone ||
+//               t.sTimeZoneValue.includes(browserLocalTimeZone) ||
+//               browserLocalTimeZone.includes(t.sTimeZoneValue)
+//           );
+
+//           const formValues = {
+//             site: currentSite,
+//             domain: defaultDomain,
+//             timeZone: foundTZ?.sTimeZoneID || "",
+//           };
+//           console.log("✅ Setting initialForm:", formValues); // DEBUG
+//           setInitialForm(formValues);
+          
+//           const sUTCStatus = tzData["UTCStatus"] ? "true" : "false";
+//           CF_sessionSet("UTCStatus", sUTCStatus, 1);
+//           setShowTimeZone(!!tzData["UTCStatus"]);
+
+//           const sShowUTCcol = tzData["sShowUTCcol"] ? "true" : "false";
+//           CF_sessionSet("sShowUTCcol", sShowUTCcol, 1);
+//         }
+//       } catch (err) {
+//         console.error("❌ Error:", err);
+//       }
+//     };
+//     initialize();
+//   }, []);
+
+//   console.log("🔍 Current initialForm:", initialForm); // DEBUG
+
+//   // ✅ Show loading BEFORE the form container
+//   if (!initialForm.site) {
+//     return (
+//       <>
+//         <div className="flex items-center justify-center font-sans p-10">
+//           <div className="w-[27em] bg-white rounded-lg shadow-md px-10 pt-10 pb-20">
+//             <div className="flex items-center justify-start mb-8">
+//               <div>
+//                 <img
+//                   src="http://localhost:9090/LogilabSDMS/images/SDMS_Logo.png"
+//                   alt="Logilab Logo"
+//                   width={"120px"}
+//                 />
+//               </div>
+//               <div>
+//                 <p className="text-[10px] mt-[-10px] text-gray-500 ms-[5px] font-bold">
+//                   v7.2_20250520_01
+//                 </p>
+//               </div>
+//             </div>
+//             <div className="text-center py-10">Loading...</div>
+//           </div>
+//         </div>
+//         <LoginImage />
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <div className="flex items-center justify-center font-sans p-10">
+//         <div className="w-[27em] bg-white rounded-lg shadow-md px-10 pt-10 pb-20">
+//           <div className="flex items-center justify-start mb-8">
+//             <div>
+//               <img
+//                 src="http://localhost:9090/LogilabSDMS/images/SDMS_Logo.png"
+//                 alt="Logilab Logo"
+//                 width={"120px"}
+//               />
+//             </div>
+//             <div>
+//               <p className="text-[10px] mt-[-10px] text-gray-500 ms-[5px] font-bold">
+//                 v7.2_20250520_01
+//               </p>
+//             </div>
+//           </div>
+
+//           {/* ✅ LoginForm */}
+//           <div style={{ display: currentView === 'login' ? 'block' : 'none' }}>
+//             <LoginForm
+//               onNavigate={setCurrentView}
+//               sites={sites}
+//               domains={domains}
+//               timeZones={timeZones}
+//               showTimeZone={showTimeZone}
+//               initialForm={initialForm}
+//               osName={osNameRef.current}
+//             />
+//           </div>
+
+//           {/* ✅ CreatePassword */}
+//           <div style={{ display: currentView === 'createpassword' ? 'block' : 'none' }}>
+//             <CreatePassword onNavigate={setCurrentView} />
+//           </div>
+
+//           {/* ✅ ChangePassword */}
+//           <div style={{ display: currentView === 'changepassword' ? 'block' : 'none' }}>
+//             <ChangePassword onNavigate={setCurrentView} />
+//           </div>
+//         </div>
+//       </div>
+//       <LoginImage />
+//     </>
+//   );
+// }
+
+// export default React.memo(Loginlayout);
+
+
+function Loginlayout() {
+  const [currentView, setCurrentView] = useState('login');
+
+  return (
+    <>
+      <div className="flex items-center justify-center font-sans p-10">
+        <div className="w-[27em] bg-white rounded-lg shadow-md px-10 pt-10 pb-20">
+          <div className="flex items-center justify-start mb-8">
+            <div>
+              <img
+                src="http://localhost:9090/LogilabSDMS/images/SDMS_Logo.png"
+                alt="Logilab Logo"
+                width={"120px"}
+              />
+            </div>
+            <div>
+              <p className="text-[10px] mt-[-10px] text-gray-500 ms-[5px] font-bold">
+                v7.2_20250520_01
+              </p>
+            </div>
+          </div>
+
+          {/* ✅ No props needed - each component fetches its own data */}
+          <div style={{ display: currentView === 'login' ? 'block' : 'none' }}>
+            <LoginForm onNavigate={setCurrentView} />
+          </div>
+
+          <div style={{ display: currentView === 'createpassword' ? 'block' : 'none' }}>
+            <CreatePassword onNavigate={setCurrentView} />
+          </div>
+
+          <div style={{ display: currentView === 'changepassword' ? 'block' : 'none' }}>
+            <ChangePassword onNavigate={setCurrentView} />
+          </div>
+        </div>
+      </div>
+      <LoginImage />
+    </>
+  );
+}
+
+export default React.memo(Loginlayout);
