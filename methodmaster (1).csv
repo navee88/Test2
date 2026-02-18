@@ -1,0 +1,4 @@
+"Display Method,Instrument,Converter status,Sample Split status,Parser status,version,Method status,Created On,Modified On,Raw Data URL ,File Name,Created By"
+"CSV-Csv,Clinical_code(Speedometer),csv,Done,Done,1 (Draft),Active,18-02-2026 11:26:15,18-02-2026 11:26:15,d0a66643-a2c2-42e4-db68-ed20effd54e9.pdf,f17e613c-c773-4dcd-f600-1abd27c21be1.pdf,Administrator"
+"CL02-Disso.,Clinical_code(Speedometer),txt,Done,Done,1,Active,17-02-2026 17:48:39,17-02-2026 18:37:39,04f730d1-afbd-45b5-dd2e-43dcac96542a.pdf,f17e613c-c773-4dcd-f600-1abd27c21be1.pdf,Administrator"
+"CL01-Clini_M1_Roquette,Clinical_code(Speedometer),txt,UnDone,Done,1,Active,17-02-2026 17:22:58,17-02-2026 18:28:06,9e1cecff-8318-4f65-c88e-40a5bf471db3.pdf,e9b3bee4-250f-4505-b4e2-42ae82429a9f.pdf,Administrator"
